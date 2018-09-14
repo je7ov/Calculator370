@@ -1,3 +1,35 @@
-.App {
-  text-align: center;
+.App,
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.title {
+  color: #343a40;
+  font-weight: bold;
+}
+
+.calculator {
+  width: 500px;
+}
+
+.calc-output {
+  width: 98%;
+  height: 60px;
+  margin: 0 1% 12px 1%;
+  font-size: 1.2em;
+  text-align: right;
+}
+
+.calc-btn {
+  height: 9vh;
+  width: 23%;
+  min-height: 40px;
+  margin: 1%;
+  font-weight: bold;
+}
+
+.calc-btn-wide {
+  width: 48%;
 }
