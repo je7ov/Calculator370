@@ -25,7 +25,6 @@ class Calculator extends Component {
   }
 
   calculate() {
-    console.log(this.state);
     let ans,
       { x, y } = this.state;
     switch (this.state.operator) {
