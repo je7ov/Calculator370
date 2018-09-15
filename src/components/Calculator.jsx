@@ -10,11 +10,14 @@ class Calculator extends Component {
       cleared: true,
       decimal: false,
       operator: null,
+      nextOperator: null,
       x: null,
       y: null
     };
 
     this.calculate = this.calculate.bind(this);
+    this.calculateState = this.calculateState.bind(this);
+    this.calculateStateWithOp = this.calculateStateWithOp.bind(this);
     this.onNumberClick = this.onNumberClick.bind(this);
     this.onAllClearClick = this.onAllClearClick.bind(this);
     this.onClearClick = this.onClearClick.bind(this);
@@ -24,7 +27,7 @@ class Calculator extends Component {
     this.onSignClick = this.onSignClick.bind(this);
   }
 
-  calculate() {
+  calculate(operator) {
     let ans,
       { x, y } = this.state;
     switch (this.state.operator) {
@@ -44,6 +47,12 @@ class Calculator extends Component {
         ans = null;
     }
 
+    return ans;
+  }
+
+  calculateState() {
+    let ans = this.calculate();
+
     if (ans) {
       this.setState({
         output: '' + ans,
@@ -54,10 +63,25 @@ class Calculator extends Component {
     }
   }
 
+  calculateStateWithOp() {
+    let ans = this.calculate();
+
+    if (ans) {
+      this.setState({
+        output: '' + ans,
+        x: ans,
+        cleared: true,
+        decimal: false,
+        operator: this.state.nextOperator,
+        nextOperator: null
+      });
+    }
+  }
+
   onNumberClick(e) {
     if (this.state.cleared) {
       this.setState({
-        output: parseInt(e.target.innerHTML, 10),
+        output: '' + parseInt(e.target.innerHTML, 10),
         cleared: e.target.innerHTML === '0'
       });
     } else {
@@ -85,17 +109,37 @@ class Calculator extends Component {
   }
 
   onOperatorClick(e) {
-    this.setState({
-      cleared: true,
-      output: '0',
-      decimal: false,
-      operator: e.target.innerHTML,
-      x: this.state.operator ? this.state.x : parseFloat(this.state.output, 10)
-    });
+    if (this.state.operator && this.state.cleared) {
+      this.setState({
+        operator: e.target.innerHTML
+      });
+    } else if (this.state.operator) {
+      this.setState(
+        {
+          output: '0',
+          cleared: true,
+          decimal: false,
+          nextOperator: e.target.innerHTML,
+          y: parseFloat(this.state.output, 10)
+        },
+        this.calculateStateWithOp
+      );
+    } else {
+      this.setState({
+        output: '0',
+        cleared: true,
+        decimal: false,
+        operator: e.target.innerHTML,
+        x: parseFloat(this.state.output, 10)
+      });
+    }
   }
 
   onEqualsClick(e) {
-    this.setState({ y: parseFloat(this.state.output, 10) }, this.calculate);
+    this.setState(
+      { y: parseFloat(this.state.output, 10) },
+      this.calculateState
+    );
   }
 
   onDecimalClick(e) {
