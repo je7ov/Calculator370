@@ -16,6 +16,7 @@ class Calculator extends Component {
       y: null
     };
 
+    this.onKeyDown = this.onKeyDown.bind(this);
     this.calculate = this.calculate.bind(this);
     this.calculateState = this.calculateState.bind(this);
     this.calculateStateWithOp = this.calculateStateWithOp.bind(this);
@@ -26,6 +27,34 @@ class Calculator extends Component {
     this.onEqualsClick = this.onEqualsClick.bind(this);
     this.onDecimalClick = this.onDecimalClick.bind(this);
     this.onSignClick = this.onSignClick.bind(this);
+  }
+
+  componentWillMount() {
+    document.addEventListener('keydown', this.onKeyDown, false);
+  }
+
+  onKeyDown(e) {
+    const numRegex = /^\d+$/;
+    const opRegex = /^[+|\-|*|/]$/;
+    if (e.shiftKey) {
+      if (e.key === '-') {
+        this.onSignClick();
+      }
+    } else {
+      if (e.key.match(numRegex)) {
+        this.onNumberClick(parseInt(e.key, 10));
+      } else if (e.key.match(opRegex)) {
+        this.onOperatorClick(e.key);
+      } else if (e.key === '.') {
+        this.onDecimalClick();
+      } else if (e.key === 'Enter') {
+        this.onEqualsClick();
+      } else if (e.key === 'Delete') {
+        this.onAllClearClick();
+      } else if (e.key === 'Backspace') {
+        this.onClearClick();
+      }
+    }
   }
 
   calculate(operator) {
@@ -73,20 +102,20 @@ class Calculator extends Component {
     });
   }
 
-  onNumberClick(e) {
+  onNumberClick(num) {
     if (this.state.cleared) {
       this.setState({
-        output: '' + parseInt(e.target.innerHTML, 10),
-        cleared: e.target.innerHTML === '0',
+        output: '' + num,
+        cleared: num === 0,
         zero: true
       });
     } else if (!this.state.operator) {
       this.setState({
-        output: this.state.output + e.target.innerHTML,
+        output: this.state.output + num,
         x: null
       });
     } else {
-      this.setState({ output: this.state.output + e.target.innerHTML });
+      this.setState({ output: this.state.output + num });
     }
   }
 
@@ -111,10 +140,10 @@ class Calculator extends Component {
     });
   }
 
-  onOperatorClick(e) {
+  onOperatorClick(operator) {
     if (!this.state.zero && this.state.operator && this.state.cleared) {
       this.setState({
-        operator: e.target.innerHTML
+        operator
       });
     } else if (this.state.operator) {
       this.setState(
@@ -122,7 +151,7 @@ class Calculator extends Component {
           output: '0',
           cleared: true,
           decimal: false,
-          nextOperator: e.target.innerHTML,
+          nextOperator: operator,
           y: parseFloat(this.state.output, 10)
         },
         this.calculateStateWithOp
@@ -132,7 +161,7 @@ class Calculator extends Component {
         output: '0',
         cleared: true,
         decimal: false,
-        operator: e.target.innerHTML,
+        operator,
         x: parseFloat(this.state.output, 10)
       });
     }
@@ -182,19 +211,19 @@ class Calculator extends Component {
           <CalcButton onClick={this.onAllClearClick}>AC</CalcButton>
           <CalcButton onClick={this.onClearClick}>C</CalcButton>
           <CalcButton onClick={this.onSignClick}>- / +</CalcButton>
-          <CalcButton onClick={this.onOperatorClick}>/</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>7</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>8</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>9</CalcButton>
-          <CalcButton onClick={this.onOperatorClick}>*</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>4</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>5</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>6</CalcButton>
-          <CalcButton onClick={this.onOperatorClick}>-</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>1</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>2</CalcButton>
-          <CalcButton onClick={this.onNumberClick}>3</CalcButton>
-          <CalcButton onClick={this.onOperatorClick}>+</CalcButton>
+          <CalcButton onClick={() => this.onOperatorClick('/')}>/</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(7)}>7</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(8)}>8</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(9)}>9</CalcButton>
+          <CalcButton onClick={() => this.onOperatorClick('*')}>*</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(4)}>4</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(5)}>5</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(6)}>6</CalcButton>
+          <CalcButton onClick={() => this.onOperatorClick('-')}>-</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(1)}>1</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(2)}>2</CalcButton>
+          <CalcButton onClick={() => this.onNumberClick(3)}>3</CalcButton>
+          <CalcButton onClick={() => this.onOperatorClick('+')}>+</CalcButton>
           <CalcButton onClick={this.onNumberClick} wide>
             0
           </CalcButton>
