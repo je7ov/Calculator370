@@ -224,7 +224,7 @@ class Calculator extends Component {
           <CalcButton onClick={() => this.onNumberClick(2)}>2</CalcButton>
           <CalcButton onClick={() => this.onNumberClick(3)}>3</CalcButton>
           <CalcButton onClick={() => this.onOperatorClick('+')}>+</CalcButton>
-          <CalcButton onClick={this.onNumberClick} wide>
+          <CalcButton onClick={() => this.onNumberClick(0)} wide>
             0
           </CalcButton>
           <CalcButton onClick={this.onDecimalClick}>.</CalcButton>
