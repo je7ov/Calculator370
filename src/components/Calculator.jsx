@@ -11,6 +11,7 @@ class Calculator extends Component {
       decimal: false,
       operator: null,
       nextOperator: null,
+      zero: false,
       x: null,
       y: null
     };
@@ -38,51 +39,51 @@ class Calculator extends Component {
         ans = x - y;
         break;
       case '/':
-        ans = x / y;
+        if (y === 0) ans = 'undefined';
+        else ans = x / y;
         break;
       case '*':
         ans = x * y;
         break;
       default:
-        ans = null;
+        ans = 'undefined';
     }
 
-    return ans;
+    return ans || 'undefined';
   }
 
   calculateState() {
-    let ans = this.calculate();
-
-    if (ans) {
-      this.setState({
-        output: '' + ans,
-        cleared: true,
-        decimal: false,
-        operator: null
-      });
-    }
+    this.setState({
+      output: '' + this.calculate(),
+      cleared: true,
+      decimal: false,
+      operator: null
+    });
   }
 
   calculateStateWithOp() {
     let ans = this.calculate();
-
-    if (ans) {
-      this.setState({
-        output: '' + ans,
-        x: ans,
-        cleared: true,
-        decimal: false,
-        operator: this.state.nextOperator,
-        nextOperator: null
-      });
-    }
+    this.setState({
+      output: '' + ans,
+      x: ans,
+      cleared: true,
+      decimal: false,
+      operator: this.state.nextOperator,
+      nextOperator: null
+    });
   }
 
   onNumberClick(e) {
     if (this.state.cleared) {
       this.setState({
         output: '' + parseInt(e.target.innerHTML, 10),
-        cleared: e.target.innerHTML === '0'
+        cleared: e.target.innerHTML === '0',
+        zero: true
+      });
+    } else if (!this.state.operator) {
+      this.setState({
+        output: this.state.output + e.target.innerHTML,
+        x: null
       });
     } else {
       this.setState({ output: this.state.output + e.target.innerHTML });
@@ -94,6 +95,7 @@ class Calculator extends Component {
       cleared: true,
       output: '0',
       decimal: false,
+      zero: false,
       operator: null,
       x: null,
       y: null
@@ -104,12 +106,13 @@ class Calculator extends Component {
     this.setState({
       cleared: true,
       output: '0',
-      decimal: false
+      decimal: false,
+      zero: false
     });
   }
 
   onOperatorClick(e) {
-    if (this.state.operator && this.state.cleared) {
+    if (!this.state.zero && this.state.operator && this.state.cleared) {
       this.setState({
         operator: e.target.innerHTML
       });
