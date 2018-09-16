@@ -74,7 +74,6 @@ class Calculator extends Component {
   }
 
   onNumberClick(e) {
-    console.log('Pressed', e.target.innerHTML);
     if (this.state.cleared) {
       this.setState({
         output: '' + parseInt(e.target.innerHTML, 10),
@@ -113,7 +112,6 @@ class Calculator extends Component {
   }
 
   onOperatorClick(e) {
-    console.log('Pressed', e.target.innerHTML);
     if (!this.state.zero && this.state.operator && this.state.cleared) {
       this.setState({
         operator: e.target.innerHTML
@@ -141,7 +139,6 @@ class Calculator extends Component {
   }
 
   onEqualsClick(e) {
-    console.log('Pressed', e.target.innerHTML);
     if (!this.state.cleared || this.state.zero) {
       this.setState(
         { y: parseFloat(this.state.output, 10) },
@@ -172,8 +169,6 @@ class Calculator extends Component {
   }
 
   render() {
-    console.log(this.state);
-
     return (
       <Fragment>
         <div className="calculator">
