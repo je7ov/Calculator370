@@ -169,7 +169,6 @@ class Calculator extends Component {
 
   onEqualsClick(e) {
     if (!this.state.cleared || this.state.zero) {
-      console.log(parseFloat(this.state.output, 10));
       this.setState(
         { y: parseFloat(this.state.output, 10) },
         this.calculateState
@@ -199,7 +198,6 @@ class Calculator extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <Fragment>
         <div className="calculator">
