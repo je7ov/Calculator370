@@ -78,7 +78,8 @@ class Calculator extends Component {
         ans = this.state.output;
     }
 
-    return ans || 'undefined';
+    if (isNaN(ans)) return 'undefined';
+    else return ans;
   }
 
   calculateState() {
@@ -148,7 +149,6 @@ class Calculator extends Component {
     } else if (this.state.operator) {
       this.setState(
         {
-          output: '0',
           cleared: true,
           decimal: false,
           nextOperator: operator,
@@ -158,7 +158,6 @@ class Calculator extends Component {
       );
     } else {
       this.setState({
-        output: '0',
         cleared: true,
         decimal: false,
         operator,
