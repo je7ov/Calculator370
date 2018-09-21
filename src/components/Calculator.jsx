@@ -39,26 +39,35 @@ class Calculator extends Component {
     const opRegex = /^[+|\-|*|/]$/;
     if (e.shiftKey && e.ctrlKey && e.altKey) {
       if (e.code === 'Slash') {
+        e.preventDefault();
         this.setState({ debugging: !this.state.debugging });
       }
     } else if (e.shiftKey) {
       if (e.code === 'Minus') {
+        e.preventDefault();
         this.onSignClick();
       } else if (e.key.match(opRegex)) {
+        e.preventDefault();
         this.onOperatorClick(e.key);
       }
     } else {
       if (e.key.match(numRegex)) {
+        e.preventDefault();
         this.onNumberClick(parseInt(e.key, 10));
       } else if (e.key.match(opRegex)) {
+        e.preventDefault();
         this.onOperatorClick(e.key);
       } else if (e.key === '.') {
+        e.preventDefault();
         this.onDecimalClick();
       } else if (e.key === 'Enter') {
+        e.preventDefault();
         this.onEqualsClick();
       } else if (e.key === 'Delete') {
+        e.preventDefault();
         this.onAllClearClick();
       } else if (e.key === 'Backspace') {
+        e.preventDefault();
         this.onClearClick();
       }
     }
