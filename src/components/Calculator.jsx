@@ -159,6 +159,7 @@ class Calculator extends Component {
           cleared: true,
           decimal: false,
           nextOperator: operator,
+          zero: false,
           y: parseFloat(this.state.output, 10)
         },
         this.calculateStateWithOp
@@ -168,13 +169,14 @@ class Calculator extends Component {
         cleared: true,
         decimal: false,
         operator,
+        zero: false,
         x: parseFloat(this.state.output, 10)
       });
     }
   }
 
   onEqualsClick(e) {
-    if (!this.state.cleared || !this.state.zero) {
+    if (!this.state.cleared || this.state.zero) {
       this.setState(
         { y: parseFloat(this.state.output, 10) },
         this.calculateState
