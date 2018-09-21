@@ -13,7 +13,8 @@ class Calculator extends Component {
       nextOperator: null,
       zero: false,
       x: null,
-      y: null
+      y: null,
+      debugging: false
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
@@ -36,9 +37,15 @@ class Calculator extends Component {
   onKeyDown(e) {
     const numRegex = /^\d+$/;
     const opRegex = /^[+|\-|*|/]$/;
-    if (e.shiftKey) {
-      if (e.key === '-') {
+    if (e.shiftKey && e.ctrlKey && e.altKey) {
+      if (e.code === 'Slash') {
+        this.setState({ debugging: !this.state.debugging });
+      }
+    } else if (e.shiftKey) {
+      if (e.code === 'Minus') {
         this.onSignClick();
+      } else if (e.key.match(opRegex)) {
+        this.onOperatorClick(e.key);
       }
     } else {
       if (e.key.match(numRegex)) {
@@ -142,11 +149,11 @@ class Calculator extends Component {
   }
 
   onOperatorClick(operator) {
-    if (!this.state.zero && this.state.operator && this.state.cleared) {
+    if (this.state.zero && this.state.operator && this.state.cleared) {
       this.setState({
         operator
       });
-    } else if (this.state.operator) {
+    } else if (this.state.operator && this.state.zero) {
       this.setState(
         {
           cleared: true,
@@ -167,7 +174,7 @@ class Calculator extends Component {
   }
 
   onEqualsClick(e) {
-    if (!this.state.cleared || this.state.zero) {
+    if (!this.state.cleared || !this.state.zero) {
       this.setState(
         { y: parseFloat(this.state.output, 10) },
         this.calculateState
@@ -185,7 +192,7 @@ class Calculator extends Component {
 
   onSignClick(e) {
     let output;
-    if (this.state.output !== '0') {
+    if (!this.state.output.match(/^0\.?0*$/)) {
       if (this.state.output.charAt(0) === '-') {
         output = this.state.output.slice(1);
       } else {
@@ -197,8 +204,33 @@ class Calculator extends Component {
   }
 
   render() {
+    let stateArr = [];
+    for (let prop in this.state) {
+      stateArr.push(prop);
+      stateArr.push(this.state[prop]);
+    }
+
     return (
       <Fragment>
+        <div className="debug-text">
+          {this.state.debugging
+            ? stateArr.map((prop, i) => {
+                if (i % 2 === 0)
+                  return (
+                    <h4 key={i} className="text-right">
+                      {prop}
+                    </h4>
+                  );
+                else
+                  return (
+                    <p key={i} className="text-right">
+                      {String(prop)}
+                    </p>
+                  );
+              })
+            : null}
+        </div>
+
         <div className="calculator">
           <input
             type="text"
